@@ -1,0 +1,26 @@
+# config.yaml.example
+
+env: development
+
+database:
+  host: your_database_host
+  port: your_database_port
+  user: your_database_user
+  password: your_database_password
+  name: your_database_name
+#  max_open_conns: your_database_max_open_conns
+#  max_idle_conns: your_database_max_idle_conns
+  conn_max_lifetime: your_database_conn_max_lifetime
+#  ssl_mode: your_database_ssl_mode
+
+sms:
+  access_key_id: "your_sms_access_key_id"
+  access_key_secret: "your_sms_access_key_secret"
+  endpoint: "your_sms_endpoint"
+  sign_name: "your_sms_sign_name"
+  template_code: "your_sms_template_code"
+
+redis:
+  addr: "your_redis_addr"
+  password: "your_redis_password"
+  db: your_redis_db
