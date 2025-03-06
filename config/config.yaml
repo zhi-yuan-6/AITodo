@@ -12,6 +12,8 @@ database:
 #  ssl_mode: disable
 
 sms:
+  access_key_id: "LTAI5tS6ycw2YSumWJABk5WF"
+  access_key_secret: "9M3a1o97yvcPO65UB1IDKgy0tbFPhM"
   endpoint: "dysmsapi.aliyuncs.com"
   sign_name: "任务管理助手"
   template_code: "SMS_479865001"
