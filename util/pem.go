@@ -2,6 +2,8 @@ package util
 
 import (
 	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
@@ -9,7 +11,7 @@ import (
 )
 
 // 生成pem私钥
-/*func GeneratePEM() {
+func GeneratePEM() {
 	//生成ECDSA私钥
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
@@ -30,7 +32,7 @@ import (
 
 	//使用私钥作为jwtSecret
 	JwtSecret = privateKey
-}*/
+}
 
 func pemToECDSAPrivateKey(pemBytes []byte) (*ecdsa.PrivateKey, error) {
 	// 解析 PEM 数据块

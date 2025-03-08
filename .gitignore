@@ -2,3 +2,4 @@ private_key.pem
 .idea
 AITodo.exe
 config/config.yaml
+Dockerfile

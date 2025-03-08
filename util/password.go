@@ -55,24 +55,6 @@ func ValidatePasswordPolicy(pwd string) error {
 	return nil
 }
 
-/*var (
-	upperRegex   = regexp.MustCompile(`[A-Z]`)
-	lowerRegex   = regexp.MustCompile(`[a-z]`)
-	numberRegex  = regexp.MustCompile(`[0-9]`)
-	specialRegex = regexp.MustCompile(`[!@#$%^&*]`)
-)
-
-func ValidatePasswordPolicy(pwd string) error {
-	if len(pwd) < 8 {
-		return errors.New("密码至少需要8个字符")
-	}
-
-	if !(upperRegex.MatchString(pwd) && lowerRegex.MatchString(pwd) && numberRegex.MatchString(pwd) && specialRegex.MatchString(pwd)) {
-		return errors.New("密码必须包含大小写字幕、数组和特殊字符")
-	}
-	return nil
-}*/
-
 // 注册时应生成符合PHC标准的哈希字符串
 func HashPassword(password string) (string, error) {
 	params := &argon2id.Params{
