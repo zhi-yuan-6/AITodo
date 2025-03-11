@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9f0684b-3852-4f17-994f-9950958d7c18" name="更改" comment="Dockerfile" />
+    <list default="true" id="e9f0684b-3852-4f17-994f-9950958d7c18" name="更改" comment="Dockerfile">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.yaml.example" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.yaml.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/register_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/register_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/cors.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,11 +68,11 @@
       <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo\services\help" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo\nginx" />
       <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo" />
       <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo\services\ai_service" />
       <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo\services\help" />
       <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo\services\ai" />
-      <recent name="C:\Users\86166\Desktop\code\Go\workspace\AITodo\services" />
     </key>
   </component>
   <component name="RunManager" selected="Go 构建.go build AITodo/main">
@@ -128,6 +137,7 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="nginx.conf" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Dockerfile" />

@@ -1,5 +1,6 @@
 private_key.pem
 .idea
+.env
 AITodo.exe
 config/config.yaml
 Dockerfile

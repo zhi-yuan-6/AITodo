@@ -3,7 +3,7 @@
 env: development
 
 database:
-  host: your_database_host
+  host: your_database_host  若使用docker-compose则为："mysql"
   port: your_database_port
   user: your_database_user
   password: your_database_password
@@ -21,6 +21,6 @@ sms:
   template_code: "your_sms_template_code"
 
 redis:
-  addr: "your_redis_addr"
+  addr: "your_redis_addr" 若使用docker-compose构建则修改为："redis:6379"
   password: "your_redis_password"
   db: your_redis_db

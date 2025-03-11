@@ -61,20 +61,14 @@ func SendVerifyCodeHandler(c *gin.Context) {
 		log.Fatalf("验证码保存失败: %v", err)
 	}
 
-	// 异步发送短信
-	if err := smsService.SendVerificationCodeAsync(phone, code); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "提交短信任务失败"})
+	//发送验证码
+	err = smsService.SendVerificationCode(phone, code)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("验证码发送失败:%s", err.Error())})
 		return
 	}
 
 	// 立即返回成功
 	c.JSON(http.StatusOK, gin.H{"message": "验证码已发送"})
-
-	/*//发送验证码
-	err = smsService.SendVerificationCode(phone, code)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("验证码发送失败:%s", err.Error())})
-		return
-	}*/
 
 }
