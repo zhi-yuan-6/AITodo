@@ -1,6 +1,9 @@
 package dto
 
-import "AITodo/models"
+import (
+	"AITodo/models"
+	"AITodo/util"
+)
 
 type LoginRequest struct {
 	Identifier string `json:"identifier" binding:"required"` //手机号或邮箱
@@ -8,6 +11,6 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Token string      `json:"token"`
-	User  models.User `json:"user"`
+	TokenPair *util.TokenPair `json:"token_pair"`
+	User      models.User     `json:"user"`
 }

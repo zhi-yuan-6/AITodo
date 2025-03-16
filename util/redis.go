@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"strconv"
 	"time"
 )
 
@@ -35,4 +36,38 @@ func StoreCode(phone, code string, expiration time.Duration) error {
 
 func GetCode(phone string) (string, error) {
 	return Client.Get(ctx, phone).Result()
+}
+
+// 存储refreshtoken
+func StoreToken(userID uint, token string, expiration time.Duration) error {
+	return Client.Set(ctx, strconv.FormatUint(uint64(userID), 10), token, expiration).Err()
+}
+
+func GetToken(userID uint) (string, error) {
+	return Client.Get(ctx, strconv.FormatUint(uint64(userID), 10)).Result()
+}
+
+// 使令牌失效（加入黑名单）
+func InvalidateToken(tokenString string) error {
+	// 解析 Token 获取 jti
+	claims, err := ParseJWT(tokenString)
+	if err != nil {
+		return err
+	}
+	jti := claims.RegisteredClaims.ID // 假设 JWT 包含 jti 字段
+	key := fmt.Sprintf("jwt:blacklist:%s", jti)
+	return Client.Set(ctx, key, "revoked", time.Until(claims.ExpiresAt.Time)).Err()
+}
+
+// 检查令牌是否有效
+func IsTokenValid(tokenString string) (bool, error) {
+	claims, err := ParseJWT(tokenString)
+	if err != nil {
+		return false, err
+	}
+
+	// 检查黑名单中的 jti
+	jti := claims.RegisteredClaims.ID
+	exist, err := Client.Exists(ctx, fmt.Sprintf("jwt:blacklist:%s", jti)).Result()
+	return exist == 0, err
 }

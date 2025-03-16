@@ -29,14 +29,14 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	token, err := util.GenerateJWT(user.ID)
+	tokenPair, err := util.GenerateJWT(user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"生成token失败:": err.Error()})
 	}
 
 	c.JSON(http.StatusOK, dto.RegisterResponse{
-		Token: token,
-		User:  *user,
+		TokenPair: tokenPair,
+		User:      *user,
 	})
 }
 

@@ -13,7 +13,7 @@ import (
 
 // HTTP Client 复用，避免每次创建新的 client
 var client = &http.Client{
-	Timeout: 10 * time.Second, // 设置超时
+	Timeout: 30 * time.Second, // 设置超时
 }
 
 // ToolCalls 结构体
@@ -50,7 +50,7 @@ type RequestBody struct {
 }
 
 // functionCalling 发送请求并解析 DeepSeek API 响应
-func functionCalling(messages []map[string]interface{}) (gjson.Result, error) {
+func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 	// 定义工具列表
 	var tools = []map[string]interface{}{
 		{
@@ -80,6 +80,14 @@ func functionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 								"title": map[string]interface{}{
 									"type":        "string",
 									"description": "任务标题，不要带时间描述的字段，长度不超过255字符，必填",
+								},
+								"category": map[string]interface{}{
+									"type":        "string",
+									"description": "任务类别，从{工作、学习、生活、健身、其他}这四个标签中选择一个，如果无法判断则默认选择其他，必填",
+								},
+								"location": map[string]interface{}{
+									"type":        "string",
+									"description": "地点，从用户的描述中提取地点，可选",
 								},
 								"description": map[string]interface{}{
 									"type":        "string",
@@ -126,6 +134,14 @@ func functionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 									"type":        "string",
 									"description": "任务标题，不要带时间描述的字段，长度不超过255字符，必填",
 								},
+								"category": map[string]interface{}{
+									"type":        "string",
+									"description": "任务类别，从{工作、学习、生活、健身、其他}这四个标签中选择一个，如果无法判断则默认选择其他，必填",
+								},
+								"location": map[string]interface{}{
+									"type":        "string",
+									"description": "地点，从用户的描述中提取地点，可选",
+								},
 								"description": map[string]interface{}{
 									"type":        "string",
 									"description": "任务描述，可选",
@@ -168,6 +184,14 @@ func functionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 								"title": map[string]interface{}{
 									"type":        "string",
 									"description": "任务标题，不要带时间描述的字段，应尽量简短并且可以表达清楚用户要求，长度不超过255字符，必填",
+								},
+								"category": map[string]interface{}{
+									"type":        "string",
+									"description": "任务类别，从{工作、学习、生活、健身、其他}这四个标签中选择一个，如果无法判断则默认选择其他，必填",
+								},
+								"location": map[string]interface{}{
+									"type":        "string",
+									"description": "地点，从用户的描述中提取地点，可选",
 								},
 								"description": map[string]interface{}{
 									"type":        "string",

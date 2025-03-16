@@ -18,7 +18,7 @@ var (
 )
 
 // CreateTask 适配器
-func adaptCreateTask(args map[string]interface{}) (interface{}, error) {
+func adaptCreateTask(id uint, args map[string]interface{}) (interface{}, error) {
 	// 参数验证
 	if err := validateCreateArgs(args); err != nil {
 		return nil, err
@@ -40,7 +40,10 @@ func adaptCreateTask(args map[string]interface{}) (interface{}, error) {
 
 	// 构建 Task 对象
 	taskModel := models.Task{
+		UserID:      id,
 		Title:       task["title"].(string),
+		Category:    task["category"].(string),
+		Location:    parseString(task["location"]),
 		Description: parseString(task["description"]),
 		Status:      parseStatus(task["status"]),
 		StartDate:   startDate,

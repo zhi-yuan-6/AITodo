@@ -1,6 +1,9 @@
 package dto
 
-import "AITodo/models"
+import (
+	"AITodo/models"
+	"AITodo/util"
+)
 
 type RegisterRequest struct {
 	Phone    string `json:"phone" binding:"required"`
@@ -9,6 +12,6 @@ type RegisterRequest struct {
 }
 
 type RegisterResponse struct {
-	Token string      `json:"token"`
-	User  models.User `json:"user"`
+	TokenPair *util.TokenPair `json:"token_pair"`
+	User      models.User     `json:"user"`
 }

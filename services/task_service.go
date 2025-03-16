@@ -30,6 +30,8 @@ func UpdateTask(id uint, req models.Task) (*models.Task, error) {
 	}
 
 	task.Title = req.Title
+	task.Category = req.Category
+	task.Location = req.Location
 	task.Description = req.Description
 	task.Status = req.Status
 	task.StartDate = req.StartDate

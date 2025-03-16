@@ -6,6 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="e9f0684b-3852-4f17-994f-9950958d7c18" name="更改" comment="Dockerfile">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/ai_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/ai_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/login_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/login_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/register_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/register_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/task_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/task_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dto/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/dto/login.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dto/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/dto/register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/globals/globals.go" beforeDir="false" afterPath="$PROJECT_DIR$/globals/globals.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/task.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/task.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/routes.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/ai_service/adapt_task.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/ai_service/adapt_task.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/ai_service/ai_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/ai_service/ai_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/ai_service/alapi.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/ai_service/alapi.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/task_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/task_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/jwt.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/redis.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +35,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Go File" />
         <option value="Dockerfile" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
@@ -46,6 +66,7 @@
     &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/86166/Desktop/code/Go/workspace/AITodo/config&quot;,
@@ -53,6 +74,11 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
   }
 }</component>
   <component name="RecentsManager">
@@ -131,6 +157,17 @@
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="nginx.conf" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Dockerfile" />

@@ -15,7 +15,7 @@ const (
 )
 
 type User struct {
-	ID       int       `gorm:"primaryKey;autoIncrement" json:"id"`
+	ID       uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	UserName string    `gorm:"type:varchar(50);uniqueIndex;not null" json:"user_name"`
 	Password string    `gorm:"type:varchar(255);not null" json:"-"` //密码哈希不序列化到json
 	Phone    *string   `gorm:"type:varchar(20);uniqueIndex;default:NUll" json:"phone"`

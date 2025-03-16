@@ -3,6 +3,7 @@ package controllers
 import (
 	"AITodo/models"
 	"AITodo/services"
+	"AITodo/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -20,17 +21,24 @@ func GetAllTasks(c *gin.Context) {
 
 // CreateTask 创建新任务
 func CreateTask(c *gin.Context) {
+	uid, err := util.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	var task models.Task
 	if err := c.ShouldBindJSON(&task); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"解析task失败": err.Error()})
 		return
 	}
+	task.UserID = uid
 
 	if err := services.CreateTask(task); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"创建任务失败": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"data": task})
+	c.JSON(http.StatusCreated, gin.H{"data": "创建成功"})
 }
 
 // UpdateTask 更新任务
@@ -50,6 +58,7 @@ func UpdateTask(c *gin.Context) {
 	task, err := services.UpdateTask(uint(id), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": task})
 }

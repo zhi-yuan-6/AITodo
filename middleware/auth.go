@@ -14,11 +14,6 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 
-		if isWhitelist(c) {
-			c.Next()
-			return
-		}
-
 		//非白名单路由 执行jwt验证逻辑
 		//从handler中获取token
 		authHeader := c.GetHeader("Authorization")
@@ -36,6 +31,7 @@ func JWTAuth() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "令牌格式错误"})
 			return
 		}
+
 		//验证jwt
 		claims, err := util.ParseJWT(parts[1])
 		if err != nil {
@@ -43,22 +39,54 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 
+		valid, err := util.IsTokenValid(parts[1])
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			return
+		}
+		if !valid {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "令牌已经失效"})
+		}
+
 		//将用户信息存入上下文
-		c.Set("usrID", claims.ID)
+		c.Set("user_id", claims.UserID)
 
 		c.Next() //继续后续处理
 	}
 }
 
-/*func isWhitelist(path string) bool {
-	whitelist := map[string]bool{
-		"/user/login":    true,
-		"/user/register": true,
-	}
-	return whitelist[path]
-}*/
+// middleware/auth.go
+func RefreshToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req struct {
+			RefreshToken string `json:"refresh_token"`
+		}
 
-// 支持 HTTP 方法 + 路径组合
+		// 1. 参数校验
+		if err := c.ShouldBindJSON(&req); err != nil || req.RefreshToken == "" {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "无效请求格式"})
+			return
+		}
+
+		// 2. 解析令牌
+		claims, err := util.ParseAndValidateJWT(req.RefreshToken)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			return
+		}
+
+		// 3. 生成新令牌
+		newTokens, err := util.GenerateJWT(claims.UserID)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "令牌刷新失败"})
+			return
+		}
+
+		c.JSON(200, newTokens)
+	}
+}
+
+/*// 支持 HTTP 方法 + 路径组合
 var whitelist = map[string]map[string]bool{
 	"/user/send_code": {
 		"GET":     true,
@@ -80,4 +108,4 @@ func isWhitelist(c *gin.Context) bool {
 		return false
 	}
 	return methods[c.Request.Method]
-}
+}*/
