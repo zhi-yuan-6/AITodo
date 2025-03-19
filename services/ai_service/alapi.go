@@ -1,6 +1,8 @@
 package ai_service
 
 import (
+	"AITodo/dto"
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -8,45 +10,13 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
 // HTTP Client 复用，避免每次创建新的 client
 var client = &http.Client{
-	Timeout: 30 * time.Second, // 设置超时
-}
-
-// ToolCalls 结构体
-type ToolCalls struct {
-	ID       string `json:"id"`
-	Type     string `json:"type"`
-	Index    int    `json:"index"`
-	Function struct {
-		Name      string                 `json:"name"`
-		Arguments map[string]interface{} `json:"arguments"` // 动态解析 arguments
-	} `json:"function"`
-}
-
-// Message 结构体
-type Message struct {
-	Content   string      `json:"content,omitempty"`
-	Role      string      `json:"role,omitempty"`
-	ToolCalls []ToolCalls `json:"tool_calls,omitempty"`
-}
-
-// Function 结构体
-type Function struct {
-	Name        string                 `json:"name"`
-	Description string                 `json:"description"`
-	Parameters  map[string]interface{} `json:"parameters,omitempty"`
-}
-
-// 请求体结构体
-type RequestBody struct {
-	Model             string                   `json:"model"`
-	Messages          []map[string]interface{} `json:"messages"`
-	Tools             []map[string]interface{} `json:"tools"`
-	ParallelToolCalls bool                     `json:"parallel_tool_calls"`
+	Timeout: 60 * time.Second, // 设置超时
 }
 
 // functionCalling 发送请求并解析 DeepSeek API 响应
@@ -220,11 +190,12 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 	}
 
 	// 构造请求体
-	requestBody := RequestBody{
+	requestBody := dto.RequestBody{
 		Model:             "qwen-plus",
 		Messages:          messages,
 		Tools:             tools,
 		ParallelToolCalls: true,
+		Stream:            true,
 	}
 
 	// 将请求体转为 JSON
@@ -279,4 +250,108 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 	}
 
 	return completion, nil
+}
+
+// StreamFunctionCalling 流式处理AI响应并将其直接写入HTTP响应
+func StreamFunctionCalling(messages []map[string]interface{}, writer io.Writer) error {
+	// 构造请求体
+	requestBody := dto.RequestBody{
+		Model:             "qwen-plus",
+		Messages:          messages,
+		ParallelToolCalls: true,
+		Stream:            true,
+	}
+
+	// 将请求体转为 JSON
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		return fmt.Errorf("failed to marshal request body: %w", err)
+	}
+
+	// 创建 POST 请求
+	req, err := http.NewRequest("POST", "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return fmt.Errorf("failed to create request: %w", err)
+	}
+
+	// 设置请求头
+	apiKey := os.Getenv("DASHSCOPE_API_KEY")
+	if apiKey == "" {
+		return fmt.Errorf("API key is missing")
+	}
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	// 发送请求
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// 检查响应状态
+	if resp.StatusCode != http.StatusOK {
+		bodyText, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("API Error: %s\nResponse: %s", resp.Status, string(bodyText))
+	}
+
+	/*// 使用 bufio.Reader 读取响应流
+	reader := io.Reader(resp.Body)
+	buf := make([]byte, 1024)
+
+	for {
+		n, err := reader.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return fmt.Errorf("failed to read response: %w", err)
+		}
+
+		if n > 0 {
+			// 将读取到的流式数据写入 HTTP 响应
+			_, err = writer.Write([]byte(fmt.Sprintf("data: %s\n\n", string(buf[:n]))))
+			if flusher, ok := writer.(http.Flusher); ok {
+				flusher.Flush()
+			}
+			if err != nil {
+				return fmt.Errorf("failed to write response: %w", err)
+			}
+		}
+	}
+
+	return nil*/
+	// 按行读取响应流
+	scanner := bufio.NewScanner(resp.Body)
+
+	// 处理流式响应数据，转换为SSE格式并实时刷新到客户端
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue // 跳过空行
+		}
+		// 写入完整的 data: 事件
+		if !strings.HasPrefix(line, "data: ") {
+			line = "data: " + line
+		}
+		_, err = writer.Write([]byte(line + "\n\n"))
+		if flusher, ok := writer.(http.Flusher); ok {
+			flusher.Flush()
+		}
+		if err != nil {
+			return fmt.Errorf("failed to write response: %w", err)
+		}
+	}
+
+	// 检查流读取过程中是否发生错误
+	if err := scanner.Err(); err != nil {
+		//return fmt.Errorf("failed to read response: %w", err)
+		errorMsg := fmt.Sprintf("data: {\"error\": \"%s\"}\n\n", err.Error())
+		writer.Write([]byte(errorMsg))
+		if flusher, ok := writer.(http.Flusher); ok {
+			flusher.Flush()
+		}
+		return err
+	}
+	return nil
 }
