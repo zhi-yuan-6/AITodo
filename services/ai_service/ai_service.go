@@ -70,7 +70,6 @@ func ProcessTaskWithAI(userID uint, input string) (string, error) {
 
 	message := completion.Get("choices.0.message")
 	toolCalls := message.Get("tool_calls")
-
 	// 如果没有工具调用则直接返回
 	if len(toolCalls.Array()) == 0 {
 		return message.Get("content").String(), nil
@@ -80,7 +79,6 @@ func ProcessTaskWithAI(userID uint, input string) (string, error) {
 	assistantMsg := createAssistantMessage(message, toolCalls)
 	messages = append(messages, assistantMsg)
 
-	fmt.Println(toolCalls)
 	// 收集所有工具调用
 	for _, toolCall := range toolCalls.Array() {
 		response, err := processSingleToolCall(toolCall, functionMapper)

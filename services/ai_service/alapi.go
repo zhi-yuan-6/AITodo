@@ -8,15 +8,24 @@ import (
 	"fmt"
 	"github.com/tidwall/gjson"
 	"io"
+	"net"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 )
 
+var transport = &http.Transport{
+	DialContext: (&net.Dialer{
+		Timeout: 10 * time.Second,
+	}).DialContext,
+	ResponseHeaderTimeout: 15 * time.Second,
+}
+
 // HTTP Client 复用，避免每次创建新的 client
 var client = &http.Client{
-	Timeout: 60 * time.Second, // 设置超时
+	//Timeout: 60 * time.Second, // 设置超时
+	Transport: transport,
 }
 
 // functionCalling 发送请求并解析 DeepSeek API 响应
@@ -122,11 +131,11 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 								},
 								"start_date": map[string]interface{}{
 									"type":        "string",
-									"description": "任务开始日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填，但可为空",
+									"description": "任务开始日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填",
 								},
 								"due_date": map[string]interface{}{
 									"type":        "string",
-									"description": "任务截止日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填，但可为空",
+									"description": "任务截止日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填",
 								},
 							},
 						},
@@ -173,11 +182,11 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 								},
 								"start_date": map[string]interface{}{
 									"type":        "string",
-									"description": "任务开始日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填，但可为空",
+									"description": "任务开始日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填",
 								},
 								"due_date": map[string]interface{}{
 									"type":        "string",
-									"description": "任务截止日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填，但可为空",
+									"description": "任务截止日期，必须按照如下示例格式填写：2006-01-02 15:04:05，必填",
 								},
 							},
 							"required": []string{"title", "due_date"},
@@ -195,7 +204,6 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 		Messages:          messages,
 		Tools:             tools,
 		ParallelToolCalls: true,
-		Stream:            true,
 	}
 
 	// 将请求体转为 JSON

@@ -46,7 +46,6 @@ func GetTrendData(userID uint, interval string, start, end time.Time) (*dto.Tren
 	return result, nil
 }
 
-// 数据库查询实现
 // fetchTrendDataFromDB 从数据库中获取趋势数据
 func fetchTrendDataFromDB(userID uint, interval string, start, end time.Time) ([]struct {
 	PeriodStart time.Time

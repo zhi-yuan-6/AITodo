@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/agnivade/levenshtein"
 	"gorm.io/gorm"
+	"log"
 	"math"
 	"strings"
 	"time"
@@ -173,11 +174,11 @@ func parseTask(args map[string]interface{}) (interface{}, error) {
 
 	startDate, err := parseTime(task["start_date"])
 	if err != nil {
-		return nil, fmt.Errorf("开始日期格式错误:%w，请按照下面示例格式：2006-01-02 15:04:05", err)
+		log.Printf("任务 %s 的 start_date 解析失败: %v", task["title"], err)
 	}
 	dueDate, err := parseTime(task["due_date"])
 	if err != nil {
-		return nil, fmt.Errorf("结束日期格式错误:%w，请按照下面示例格式：2006-01-02 15:04:05", err)
+		log.Printf("任务 %s 的 due_date 解析失败: %v", task["title"], err)
 	}
 
 	// 构建 Task 对象

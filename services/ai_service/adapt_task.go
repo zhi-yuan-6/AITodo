@@ -5,6 +5,7 @@ import (
 	"AITodo/services"
 	"fmt"
 	"github.com/mitchellh/mapstructure"
+	"log"
 	"strconv"
 	"time"
 )
@@ -31,11 +32,11 @@ func adaptCreateTask(id uint, args map[string]interface{}) (interface{}, error) 
 	}
 	startDate, err := parseTime(task["start_date"])
 	if err != nil {
-		return nil, fmt.Errorf("开始日期格式错误，请按照下面示例格式：2006-01-02 15:04:05")
+		log.Printf("任务 %s 的 start_date 解析失败: %v", task["title"], err)
 	}
 	dueDate, err := parseTime(task["due_date"])
 	if err != nil {
-		return nil, fmt.Errorf("结束日期格式错误，请按照下面示例格式：2006-01-02 15:04:05")
+		log.Printf("任务 %s 的 due_date 解析失败: %v", task["title"], err)
 	}
 
 	// 构建 Task 对象
@@ -71,17 +72,6 @@ func adaptUpdateTask(args map[string]interface{}) (interface{}, error) {
 	if !ok {
 		return nil, fmt.Errorf("task字段缺失或格式错误")
 	}
-
-	//jsonReq, err := json.Marshal(req)
-	//if err != nil {
-	//	return nil, fmt.Errorf("failed to marshal map to JSON: %v", err)
-	//}
-	//
-	//var task models.Task
-	//err = json.Unmarshal(jsonReq, &task)
-	//if err != nil {
-	//	return nil, fmt.Errorf("failed to marshal map to JSON: %v", err)
-	//}
 
 	var task models.Task
 	if err := mapstructure.Decode(req, &task); err != nil {
