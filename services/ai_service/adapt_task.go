@@ -4,7 +4,6 @@ import (
 	"AITodo/models"
 	"AITodo/services"
 	"fmt"
-	"github.com/mitchellh/mapstructure"
 	"log"
 	"strconv"
 	"time"
@@ -65,20 +64,39 @@ func adaptUpdateTask(args map[string]interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	id := args["id"].(uint)
-
+	idStr := args["id"].(string)
+	id, err := strconv.ParseUint(idStr, 10, 64)
 	// 提取 task 字段
 	req, ok := args["task"].(map[string]interface{})
+	if err != nil {
+		return nil, fmt.Errorf("invalid id format: %v", err)
+	}
 	if !ok {
 		return nil, fmt.Errorf("task字段缺失或格式错误")
 	}
 
-	var task models.Task
-	if err := mapstructure.Decode(req, &task); err != nil {
-		return nil, fmt.Errorf("参数转换失败: %w", err)
+	startDate, err := parseTime(req["start_date"])
+	if err != nil {
+		log.Printf("任务 %s 的 start_date 解析失败: %v", req["title"], err)
+	}
+	dueDate, err := parseTime(req["due_date"])
+	if err != nil {
+		log.Printf("任务 %s 的 due_date 解析失败: %v", req["title"], err)
 	}
 
-	updatedTask, err := services.UpdateTask(id, task)
+	// 构建 Task 对象
+	taskModel := models.Task{
+		UserID:      uint(id),
+		Title:       req["title"].(string),
+		Category:    req["category"].(string),
+		Location:    parseString(req["location"]),
+		Description: parseString(req["description"]),
+		Status:      parseStatus(req["status"]),
+		StartDate:   startDate,
+		DueDate:     dueDate,
+	}
+
+	updatedTask, err := services.UpdateTask(uint(id), taskModel)
 	if err != nil {
 		return nil, fmt.Errorf("更新任务失败: %v", err)
 	}

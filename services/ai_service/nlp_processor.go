@@ -15,7 +15,7 @@ import (
 
 // 添加评分权重常量
 const (
-	TitleSimilarityWeight  = 0.4
+	TitleSimilarityWeight  = 0.6 //原来为0.4
 	KeywordCoverageWeight  = 0.2
 	StatusMatchWeight      = 0.2
 	DateProximityWeight    = 0.2
