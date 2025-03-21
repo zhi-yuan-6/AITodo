@@ -9,7 +9,7 @@ type Task struct {
 	ID          uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	UserID      uint      `json:"user_id"`
 	Title       string    `gorm:"size:255;not null" json:"title" binding:"required"`
-	Category    string    `gorm:"size:100;default:'其他' json:"category" binding:"required"` //工作、学习、生活、健身
+	Category    string    `gorm:"size:100;default:'其他'" json:"category" binding:"required"`
 	Location    string    `gorm:"size:255" json:"location"`
 	Description string    `gorm:"type:text" json:"description"`
 	StartDate   time.Time `gorm:"index" json:"start_date" binding:"required"`

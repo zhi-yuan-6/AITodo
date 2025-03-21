@@ -58,7 +58,7 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 							"properties": map[string]interface{}{
 								"title": map[string]interface{}{
 									"type":        "string",
-									"description": "任务标题，不要带时间描述的字段，长度不超过255字符，必填",
+									"description": "任务标题，不要带时间和地点描述的字段，长度不超过255字符，必填",
 								},
 								"category": map[string]interface{}{
 									"type":        "string",
@@ -111,7 +111,7 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 								},
 								"title": map[string]interface{}{
 									"type":        "string",
-									"description": "任务标题，不要带时间描述的字段，长度不超过255字符，必填",
+									"description": "任务标题，不要带时间和地点描述的字段，长度不超过255字符，必填",
 								},
 								"category": map[string]interface{}{
 									"type":        "string",
@@ -162,7 +162,7 @@ func FunctionCalling(messages []map[string]interface{}) (gjson.Result, error) {
 								},
 								"title": map[string]interface{}{
 									"type":        "string",
-									"description": "任务标题，不要带时间描述的字段，应尽量简短并且可以表达清楚用户要求，长度不超过255字符，必填",
+									"description": "任务标题，不要带时间和地点描述的字段，应尽量简短并且可以表达清楚用户要求，长度不超过255字符，必填",
 								},
 								"category": map[string]interface{}{
 									"type":        "string",

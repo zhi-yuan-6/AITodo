@@ -56,7 +56,15 @@ func buildQueryConditions(query *gorm.DB, task models.Task) *gorm.DB {
 		// 时间范围查询（±1天）
 		start := task.StartDate.Add(-24 * time.Hour)
 		end := task.StartDate.Add(24 * time.Hour)
-		query = query.Where("start_date BETWEEN ? AND ?", start, end)
+		if start.IsZero() && end.IsZero() {
+			query = query.Where("start_date BETWEEN ? AND ?", start, end)
+		} else if start.IsZero() {
+			query = query.Where("start_date >= ?", start)
+		} else if end.IsZero() {
+			query = query.Where("start_date <= ?", end)
+		} else {
+			// 如果 start 和 end 都为空，则不添加任何条件
+		}
 	}
 	if !task.DueDate.IsZero() {
 		// 精确匹配截止日期
