@@ -29,11 +29,25 @@ func AIAssistant(c *gin.Context) {
 		return
 	}
 
-	//这里可以添加将AI相应转化为Task的逻辑
+	/*//这里可以添加将AI相应转化为Task的逻辑
 	c.JSON(http.StatusOK, gin.H{
 		"message": "AI processed successfully",
 		"data":    response,
-	})
+	})*/
+
+	// 设置响应头，支持流式输出
+	setStreamHeaders(c)
+
+	// 调用流式AI服务
+	err = ai_service.StreamFunctionCalling(response, c.Writer)
+	if err != nil {
+		writeStreamError(c, err)
+		return
+	}
+
+	// 流式输出完成后，发送结束信号
+	c.Writer.Write([]byte("data: [DONE]\n\n"))
+	c.Writer.Flush()
 }
 
 // 生成数据分析报告
@@ -61,19 +75,12 @@ func AIAnalytics(c *gin.Context) {
 	}
 
 	// 设置响应头，支持流式输出
-	c.Header("Content-Type", "text/event-stream")
-	c.Header("Cache-Control", "no-cache")
-	c.Header("Connection", "keep-alive")
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Writer.Flush()
+	setStreamHeaders(c)
 
 	// 调用流式AI服务
 	err = ai_service.StreamFunctionCalling(messages, c.Writer)
 	if err != nil {
-		// 由于已经开始流式输出，这里只能写入错误信息
-		errorMsg := fmt.Sprintf("data: {\"error\": \"%s\"}\n\n", err.Error())
-		c.Writer.Write([]byte(errorMsg))
-		c.Writer.Flush()
+		writeStreamError(c, err)
 		return
 	}
 
@@ -95,4 +102,20 @@ func AIAnalytics(c *gin.Context) {
 		"message": "AI processed successfully",
 		"data":    content,
 	})*/
+}
+
+// setStreamHeaders configures the response headers for SSE streaming
+func setStreamHeaders(c *gin.Context) {
+	c.Header("Content-Type", "text/event-stream")
+	c.Header("Cache-Control", "no-cache")
+	c.Header("Connection", "keep-alive")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Writer.Flush()
+}
+
+// writeStreamError writes an error message to the stream
+func writeStreamError(c *gin.Context, err error) {
+	errorMsg := fmt.Sprintf("data: {\"error\": \"%s\"}\n\n", err.Error())
+	c.Writer.Write([]byte(errorMsg))
+	c.Writer.Flush()
 }

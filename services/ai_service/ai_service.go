@@ -23,7 +23,7 @@ func ProcessTaskWithAIAsync(input string, callback func(string, error)) {
 	})
 }*/
 
-func ProcessTaskWithAI(userID uint, input string) (string, error) {
+func ProcessTaskWithAI(userID uint, input string) ([]map[string]interface{}, error) {
 	//两种处理方式：1.是先使用大模型对字符串进行分析analyze，判断用户是什么操作，是创建、更新还是删除。如果是创建，则再调用模型返回创建所需要的参数；若是更新或删除，则首先调用搜索任务函数searchTask，让大模型返回搜索所需要的参数关键字string，然后搜所函数返回id和新的任务参数（若为删除则为空字段），然后再根据是更新还是删除调用对应函数。总共调用两次模型（searchTask先查）
 	//2.先让大模型分析用户输入的字符串，然后选择调用的函数，返回对应函数所需要的参数（函数名称和task）；根据函数名称调用对应函数，若为创建，则直接调用创建函数，若为更新或删除则根据返回的task参数调用searchTask函数（也可使用大模型实现检索，或者普通的方式），若返回为空则直接进行返回，查到了对应的id则进行删除或更新操作，总共调用一次模型（searchTask后查）
 
@@ -66,14 +66,17 @@ func ProcessTaskWithAI(userID uint, input string) (string, error) {
 	//for {
 	completion, err := FunctionCalling(messages)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	message := completion.Get("choices.0.message")
 	toolCalls := message.Get("tool_calls")
 	// 如果没有工具调用则直接返回
 	if len(toolCalls.Array()) == 0 {
-		return message.Get("content").String(), nil
+		//return message.Get("content"), nil
+		return append(messages, map[string]interface{}{
+			"content": message.Get("content").String(),
+		}), nil
 	}
 
 	// 添加助手的工具调用消息到上下文
@@ -105,13 +108,15 @@ func ProcessTaskWithAI(userID uint, input string) (string, error) {
 			"2. 列出所有失败操作及原因\n" +
 			"3. 使用自然语言组织成用户友好并且尽量简短的回复",
 	})
-	// 获取最终总结
-	finalCompletion, err := FunctionCalling(messages)
+
+	/*// 获取最终总结
+	finalCompletion, err := FunctionCalling(messages,)
 	if err != nil {
 		return "", err
 	}
 
-	return finalCompletion.Get("choices.0.message.content").String(), nil
+	return finalCompletion.Get("choices.0.message.content").String(), nil*/
+	return messages, nil
 }
 
 //}
