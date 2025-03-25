@@ -106,7 +106,7 @@ func ProcessTaskWithAI(userID uint, input string) ([]map[string]interface{}, err
 		"content": "请根据工具执行结果生成最终响应：" +
 			"1. 汇总所有成功操作\n" +
 			"2. 列出所有失败操作及原因\n" +
-			"3. 使用自然语言组织成用户友好并且尽量简短的回复",
+			"3. 要求使用自然语言组织成用户友好并且尽可能简短的回复",
 	})
 
 	/*// 获取最终总结

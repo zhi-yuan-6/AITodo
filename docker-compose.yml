@@ -1,7 +1,7 @@
 services:
   # 前端服务
   frontend:
-    image: aitodofrontend
+    image: zhhiyuan/aitodofrontend
     ports:
       - "80:80"
     depends_on:
@@ -12,7 +12,7 @@ services:
   # 后端服务
   backend:
 #    build: ./backend
-    image: backend
+    image: aitodobackend
     ports:
       - "8080:8080"
     env_file:
